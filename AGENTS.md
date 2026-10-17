@@ -14,7 +14,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 - **Language / Runtime**: TypeScript 5, React 19.3, Node 20 type definitions
 - **Framework**: Next.js 16.4.2, App Router, Turbopack for dev
-- **Key dependencies**: Tailwind CSS 4 through `@tailwindcss/turbopack`, `eslint-config-next`, Drizzle ORM with `postgres` against Neon Postgres, `zod` for input checks
+- **Key dependencies**: Tailwind CSS 4 through `@tailwindcss/turbopack`, shadcn/ui components on Radix primitives with `lucide-react` icons and `class-variance-authority`, `eslint-config-next`, Drizzle ORM with `postgres` against Neon Postgres, `zod` for input checks
 - **Package manager**: pnpm 12.11.2, pinned in `packageManager`
 
 ## Build approach
@@ -47,7 +47,7 @@ pnpm db:seed       # 25 demo tickets, refuses when the table is not empty
 
 ## Specs
 
-Stored in `docs/specs/`. Format: `docs/specs/NNNN-title.md`.
+Stored in `docs/specs/`. Format: `docs/specs/NNNN-title.md`, or a `docs/specs/NNNN-title/` folder holding `index.md`, `rationale.md` and `verify.md` once a spec has verify steps and saved reasoning.
 
 ## Rules
 
@@ -55,6 +55,9 @@ Stored in `docs/specs/`. Format: `docs/specs/NNNN-title.md`.
 - Comment the decisions, not the syntax.
 - Use `pnpm` only. The lockfile is `pnpm-lock.yaml` and `packageManager` pins the version.
 - App Router only, pages live in `app/`. The `@/*` alias points at the repo root.
+- UI comes from shadcn/ui in `components/ui/`. Add a component with `pnpm dlx shadcn@latest add <name>` and leave the generated files as they are; see [components/AGENTS.md](components/AGENTS.md).
+- Plain UI copy lives in `lib/messages.ts`, ticket display maps and the excerpt helper in `lib/ticket-display.ts`, and every rendered time goes through `lib/format.ts`.
+- There is no theme toggle. `app/globals.css` applies the dark token block under `prefers-color-scheme`, so dark mode follows the operating system.
 - `cacheComponents` and `partialPrefetching` are enabled in `next.config.ts`. Read `node_modules/next/dist/docs/` before changing framework behaviour, this major version differs from what older docs describe.
 - Keep answers short. When a decision is needed, ask one question and say which way you would go.
 - Say plainly when something failed. Never work around a failure quietly.
@@ -67,6 +70,7 @@ Stored in `docs/specs/`. Format: `docs/specs/NNNN-title.md`.
 ## Context files
 
 - [db/AGENTS.md](db/AGENTS.md): the ticket store, its schema, migrations and data layer functions
+- [components/AGENTS.md](components/AGENTS.md): the shadcn/ui component set, how to add to it and the tokens it reads
 
 ## Agent skills
 
@@ -82,5 +86,6 @@ Stored in `docs/specs/`. Format: `docs/specs/NNNN-title.md`.
 - [neon-drizzle](.agents/skills/neon-drizzle/): `neondatabase/ai-rules`, Drizzle ORM on Neon (schema, migrations, connection setup)
 
 MCP servers: Neon (connected)
+Declined: shadcn/ui, Radix primitives and lucide icons (Agent Skill and MCP search, /sync 2026-10-17)
 
 _Drafted by /audit from the repo, worth a quick human pass. Edit freely: once a line stops matching this draft, later runs treat it as curated and will flag rather than overwrite it._

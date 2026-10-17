@@ -14,7 +14,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | 1 | Project scaffold and stack | Foundation | existing |
 | 2 | Coding standards and lint | Foundation | done |
 | 3 | Ticket model and storage | Foundation | done |
-| 4 | Report a ticket | Slice 1 | planned |
+| 4 | Report a ticket | Slice 1 | done |
 | 5 | Resolve a ticket | Slice 2 | planned |
 
 ## Foundations
@@ -39,10 +39,16 @@ The one record everything depends on: a ticket with a title, a description, a st
 
 ## Slice 1: The core loop
 
-### 4. Report a ticket
+### 4. Report a ticket · done
 The thinnest real thread through every layer: a form page saves a ticket and the admin list shows it. This is the walking skeleton, nothing is faked.
 **Done when:** an empty form is refused with a visible message, a filled form saves, and the ticket appears in the list with status open.
-- [ ] Design it (spec): `/architect report a ticket`
+- [x] Design it (spec): [0002](../specs/0002-report-a-ticket/index.md)
+- [x] Build it: /develop report a ticket. code in `app/`, `lib/messages.ts`, `lib/format.ts`, `lib/ticket-display.ts`, `components/ui/`
+  - [x] Install shadcn and the components the two pages need, covers AC-1
+  - [x] Stand up the thin thread: the form writes a ticket and the list reads it back, covers AC-3, AC-6, AC-7, AC-12
+  - [x] Thicken the list: full rows, badges, UTC times, table and cards, empty and out of range states, paging, covers AC-6, AC-7, AC-8, AC-10
+  - [x] Thicken the form: labels, placeholders, error summary and aria wiring, pending and success states, covers AC-2, AC-3, AC-4, AC-5
+  - [x] Add the shared shell, move the copy, then run the lint and build checks, covers AC-2, AC-9, AC-11, AC-12
 
 ## Slice 2: Close the loop
 
