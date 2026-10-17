@@ -1,3 +1,4 @@
+import type { TicketStatus } from '@/db/schema';
 import type { TicketErrorCode, TicketField } from '@/lib/ticket-state';
 
 // Fixed copy, one line per field and per error code. Messages name the field
@@ -73,19 +74,37 @@ export const reportMessages = {
 
 export const adminMessages = {
   title: 'Ticket queue',
-  intro: 'Newest first, twenty tickets per page.',
+  intro:
+    'Unresolved holds the work that is still waiting, newest first. Resolved keeps what is closed, with the time it closed.',
   loading: 'Loading tickets',
-  emptyTitle: 'No tickets yet',
-  emptyBody: 'A ticket reported from the form appears here straight away.',
-  emptyLink: 'Report the first ticket',
-  outOfRangeTitle: 'This page is past the end of the queue',
+  viewsLabel: 'Ticket views',
+  views: {
+    unresolved: 'Unresolved',
+    resolved: 'Resolved',
+  },
+  empty: {
+    unresolved: {
+      title: 'Nothing is waiting',
+      body: 'Every ticket in the queue is resolved.',
+      link: 'Open the resolved view',
+    },
+    resolved: {
+      title: 'Nothing has been resolved yet',
+      body: 'A ticket lands here once it is resolved from the unresolved view.',
+    },
+  },
+  outOfRangeTitle: 'This page is past the end of this view',
   outOfRangeBody: (total: number, pageCount: number) =>
-    `The queue holds ${total} tickets across ${pageCount} pages.`,
+    `This view holds ${total} tickets across ${pageCount} ${
+      pageCount === 1 ? 'page' : 'pages'
+    }.`,
   outOfRangeLink: 'Back to page 1',
   previous: 'Previous',
   next: 'Next',
   pagePosition: (page: number, pageCount: number, total: number) =>
     `Page ${page} of ${pageCount}, ${total} tickets`,
+  resolvedAtLabel: 'Resolved at',
+  noResolvedTime: 'No resolved time',
   columns: {
     ticket: 'Ticket',
     reporter: 'Reporter',
@@ -95,5 +114,27 @@ export const adminMessages = {
     priority: 'Priority',
     status: 'Status',
     created: 'Created',
+    resolved: 'Resolved',
+    actions: 'Actions',
+  },
+  actions: {
+    startWork: 'Start work',
+    starting: 'Starting',
+    resolve: 'Resolve',
+    confirmResolve: 'Confirm resolve',
+    resolving: 'Resolving',
+    cancel: 'Cancel',
+    startWorkOn: (title: string) => `Start work on "${title}"`,
+    startingOn: (title: string) => `Starting work on "${title}"`,
+    resolveOn: (title: string) => `Resolve "${title}"`,
+    confirmResolveOn: (title: string) => `Confirm resolve of "${title}"`,
+    resolvingOn: (title: string) => `Resolving "${title}"`,
+    cancelOn: (title: string) => `Cancel resolving "${title}"`,
+  },
+  live: {
+    movedTo: (shortId: string, status: TicketStatus) =>
+      `Ticket ${shortId} is now ${status}.`,
+    resolvedToView: (shortId: string, status: TicketStatus) =>
+      `Ticket ${shortId} is now ${status} and moved to the Resolved view.`,
   },
 };

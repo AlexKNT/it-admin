@@ -1,4 +1,4 @@
-import { and, count, desc, eq, sql } from 'drizzle-orm';
+import { and, count, desc, eq, ne, sql } from 'drizzle-orm';
 import { z } from 'zod';
 import { getDb } from '@/db';
 import { tickets } from '@/db/schema';
@@ -14,12 +14,20 @@ export type CreateTicketInput = Omit<
   'id' | 'status' | 'createdAt' | 'updatedAt' | 'resolvedAt'
 >;
 
+export type TicketView = 'all' | 'unresolved' | 'resolved';
+
+export type TicketCounts = {
+  unresolved: number;
+  resolved: number;
+};
+
 export type TicketPage = {
   items: Ticket[];
   total: number;
   page: number;
   pageSize: number;
   pageCount: number;
+  counts: TicketCounts;
 };
 
 export async function createTicket(input: CreateTicketInput) {
@@ -42,20 +50,53 @@ export async function getTicket(id: string) {
   return ticket ?? null;
 }
 
-export async function listTickets(page: number): Promise<TicketPage> {
+export async function listTickets(
+  page: number,
+  view: TicketView = 'all',
+): Promise<TicketPage> {
   const db = getDb();
 
-  const [items, totals] = await Promise.all([
+  const where =
+    view === 'all'
+      ? undefined
+      : view === 'resolved'
+        ? eq(tickets.status, 'Resolved')
+        : ne(tickets.status, 'Resolved');
+
+  // One grouped count feeds both view links, so the two counts can never
+  // disagree with each other or with the rows on screen.
+  const [items, statusTotals] = await Promise.all([
     db
       .select()
       .from(tickets)
+      .where(where)
       .orderBy(desc(tickets.createdAt), desc(tickets.id))
       .limit(PAGE_SIZE)
       .offset((page - 1) * PAGE_SIZE),
-    db.select({ total: count() }).from(tickets),
+    db
+      .select({ status: tickets.status, total: count() })
+      .from(tickets)
+      .groupBy(tickets.status),
   ]);
 
-  const total = Number(totals[0]?.total ?? 0);
+  const counts: TicketCounts = { unresolved: 0, resolved: 0 };
+
+  for (const row of statusTotals) {
+    const total = Number(row.total);
+
+    if (row.status === 'Resolved') {
+      counts.resolved += total;
+    } else {
+      counts.unresolved += total;
+    }
+  }
+
+  const total =
+    view === 'resolved'
+      ? counts.resolved
+      : view === 'unresolved'
+        ? counts.unresolved
+        : counts.unresolved + counts.resolved;
 
   return {
     items,
@@ -63,6 +104,7 @@ export async function listTickets(page: number): Promise<TicketPage> {
     page,
     pageSize: PAGE_SIZE,
     pageCount: Math.max(1, Math.ceil(total / PAGE_SIZE)),
+    counts,
   };
 }
 

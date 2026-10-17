@@ -15,7 +15,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | 2 | Coding standards and lint | Foundation | done |
 | 3 | Ticket model and storage | Foundation | done |
 | 4 | Report a ticket | Slice 1 | done |
-| 5 | Resolve a ticket | Slice 2 | planned |
+| 5 | Resolve a ticket | Slice 2 | in-progress |
 
 ## Foundations
 
@@ -52,14 +52,20 @@ The thinnest real thread through every layer: a form page saves a ticket and the
 
 ## Slice 2: Close the loop
 
-### 5. Resolve a ticket
+### 5. Resolve a ticket · in-progress
 The admin marks a ticket resolved from the list, and the new status survives a reload.
 **Done when:** the list shows open and resolved tickets apart, one click flips a ticket to resolved, and a reload keeps it resolved.
-- [ ] Design it (spec): `/architect resolve a ticket`
+- [x] Design it (spec): [0003](../specs/0003-resolve-a-ticket.md)
+- [x] Build it: /develop resolve a ticket. code in `app/admin/`, `lib/ticket-view.ts`, `lib/messages.ts`
+  - [x] Add the two views: the `listTickets` counts, then the Unresolved and Resolved split with its own paging and empty states, covers AC-1, AC-2, AC-3, AC-10
+  - [x] Add the row controls: Start work, then Resolve with the in place confirm, both sending the expected status to the existing action, covers AC-4, AC-5, AC-6, AC-7
+  - [x] Thicken the feedback and the mobile card: pending labels, the live line with focus, refusal copy per failure code, covers AC-7, AC-8, AC-9
+  - [x] Run the lint and build checks, then the manual scenarios in the spec, covers AC-11, AC-12
 
 ## Deferred
 Out of scope for this build pass, kept here so the plan stays honest.
 - **Search and filter the list**: narrow by status or words · needs a decision
+- **Reopen a resolved ticket**: a way back from Resolved, which the forward only rule refuses today · needs a decision
 - **Comments on a ticket**: a running note between reporter and admin · needs a decision
 - **File attachments**: a screenshot with the report · needs a decision
 - **Email notifications**: needs a mail service · needs a decision
