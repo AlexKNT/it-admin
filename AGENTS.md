@@ -19,7 +19,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## Build approach
 
-<TBD, set by /scope>
+Tracer Bullet: each slice runs end to end through storage, logic and page, so every slice is working and demoable. Workflow tier: Prototype.
 
 ## Commands
 
@@ -65,5 +65,8 @@ Stored in `docs/specs/`. Format: `docs/specs/NNNN-title.md`.
 - [audit](.agents/skills/audit/): `JavaScript-Mastery-Pro/skills`, writes and maintains these context files
 - [sync](.agents/skills/sync/): `JavaScript-Mastery-Pro/skills`, refreshes context after a change
 - [document](.agents/skills/document/): `JavaScript-Mastery-Pro/skills`, writes PR notes and changelogs
+- [neon-drizzle](.agents/skills/neon-drizzle/): `neondatabase/ai-rules`, Drizzle ORM on Neon (schema, migrations, connection setup)
+
+Declined: Neon MCP server
 
 _Drafted by /audit from the repo, worth a quick human pass. Edit freely: once a line stops matching this draft, later runs treat it as curated and will flag rather than overwrite it._
