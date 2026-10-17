@@ -14,7 +14,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 - **Language / Runtime**: TypeScript 5, React 19.3, Node 20 type definitions
 - **Framework**: Next.js 16.4.2, App Router, Turbopack for dev
-- **Key dependencies**: Tailwind CSS 4 through `@tailwindcss/turbopack`, `eslint-config-next`
+- **Key dependencies**: Tailwind CSS 4 through `@tailwindcss/turbopack`, `eslint-config-next`, Drizzle ORM with `postgres` against Neon Postgres, `zod` for input checks
 - **Package manager**: pnpm 12.11.2, pinned in `packageManager`
 
 ## Build approach
@@ -38,6 +38,11 @@ pnpm lint
 
 # Test
 # none configured yet, /test sets one up on first use
+
+# Database (needs DATABASE_URL in .env.local; the Neon CLI pulls it with `neon deploy`)
+pnpm db:generate   # write a migration from db/schema.ts
+pnpm db:migrate    # apply pending migrations
+pnpm db:seed       # 25 demo tickets, refuses when the table is not empty
 ```
 
 ## Specs
@@ -53,6 +58,15 @@ Stored in `docs/specs/`. Format: `docs/specs/NNNN-title.md`.
 - `cacheComponents` and `partialPrefetching` are enabled in `next.config.ts`. Read `node_modules/next/dist/docs/` before changing framework behaviour, this major version differs from what older docs describe.
 - Keep answers short. When a decision is needed, ask one question and say which way you would go.
 - Say plainly when something failed. Never work around a failure quietly.
+- `db/schema.ts` is the source of truth for the database shape. Change it, then `pnpm db:generate` and `pnpm db:migrate`; never hand edit the Neon console, the next migration reverts it.
+- A `"use server"` module may only export async functions, so shared action types and initial state live in `lib/`, not beside the actions.
+- Never log, throw or render a reporter email. Error messages name the field only.
+- `.agents/` holds vendored skill content and is excluded from ESLint. Put lint rules in `eslint.config.mjs`, not on those files.
+- pnpm blocks dependency build scripts by default. A tool that needs one (esbuild, used by `tsx` and `drizzle-kit`) goes in `pnpm-workspace.yaml` under `allowBuilds`.
+
+## Context files
+
+- [db/AGENTS.md](db/AGENTS.md): the ticket store, its schema, migrations and data layer functions
 
 ## Agent skills
 
@@ -67,6 +81,6 @@ Stored in `docs/specs/`. Format: `docs/specs/NNNN-title.md`.
 - [document](.agents/skills/document/): `JavaScript-Mastery-Pro/skills`, writes PR notes and changelogs
 - [neon-drizzle](.agents/skills/neon-drizzle/): `neondatabase/ai-rules`, Drizzle ORM on Neon (schema, migrations, connection setup)
 
-Declined: Neon MCP server
+MCP servers: Neon (connected)
 
 _Drafted by /audit from the repo, worth a quick human pass. Edit freely: once a line stops matching this draft, later runs treat it as curated and will flag rather than overwrite it._

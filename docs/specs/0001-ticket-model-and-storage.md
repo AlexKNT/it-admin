@@ -1,7 +1,7 @@
 # 0001. Ticket model and storage on Neon Postgres
 
 **Date**: 2026-10-17
-**Status**: In Progress
+**Status**: Accepted
 
 ## Summary
 

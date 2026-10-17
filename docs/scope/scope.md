@@ -13,7 +13,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 |---|---------|-------|--------|
 | 1 | Project scaffold and stack | Foundation | existing |
 | 2 | Coding standards and lint | Foundation | done |
-| 3 | Ticket model and storage | Foundation | in-progress |
+| 3 | Ticket model and storage | Foundation | done |
 | 4 | Report a ticket | Slice 1 | planned |
 | 5 | Resolve a ticket | Slice 2 | planned |
 
@@ -28,14 +28,14 @@ Conventions captured in root `AGENTS.md` and ESLint wired to the Next.js config,
 - [x] Capture conventions and tooling choices: `/audit`
 - [x] Confirm lint runs clean: `pnpm lint`
 
-### 3. Ticket model and storage · in-progress
+### 3. Ticket model and storage · done
 The one record everything depends on: a ticket with a title, a description, a status and a created time, plus somewhere that keeps it after a restart.
 **Done when:** a ticket written on one request is read back on the next, and no later slice needs to change its shape.
 - [x] Design it (spec): [0001](../specs/0001-ticket-model-and-storage.md)
-- [ ] Build it: /develop ticket model and storage
-  - [ ] Install Drizzle, postgres.js, zod and the database scripts, define the enums and table, apply the first migration, covers AC-1
-  - [ ] Build the data layer: connection, create, read, seeded paging and the guarded status update, covers AC-2, AC-4, AC-5, AC-6, AC-7, AC-10
-  - [ ] Add zod validation, the typed server actions and the shared error boundary, covers AC-3, AC-8, AC-9, AC-11
+- [x] Build it: /develop ticket model and storage
+  - [x] Install Drizzle, postgres.js, zod and the database scripts, define the enums and table, apply the first migration, covers AC-1
+  - [x] Build the data layer: connection, create, read, seeded paging and the guarded status update, covers AC-2, AC-4, AC-5, AC-6, AC-7, AC-10
+  - [x] Add zod validation, the typed server actions and the shared error boundary, covers AC-3, AC-8, AC-9, AC-11
 
 ## Slice 1: The core loop
 
